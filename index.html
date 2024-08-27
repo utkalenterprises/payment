@@ -124,13 +124,15 @@
   const upiId = 'paytmqr281005050101cpjybwznm3x0@paytm'; // Replace with your UPI ID
 
   if (shopName && amount) {
-    fetch('https://script.google.com/macros/s/AKfycbw4ftIZFaqH46E1sJT-cKiB6a4xW2tBebuzJipaxaGAM6Uqtcq39MwWokTiHpOIjKwv/exec', { // Replace with your Google Apps Script URL
-      method: 'POST',
-      headers: {
+    fetch('https://script.google.com/macros/s/AKfycbw4ftIZFaqH46E1sJT-cKiB6a4xW2tBebuzJipaxaGAM6Uqtcq39MwWokTiHpOIjKwv/exec', {
+    method: 'POST',
+    mode: 'no-cors', // This bypasses CORS, but you won't be able to handle the response
+    headers: {
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ shopName: shopName, amount: amount }),
-    })
+    },
+    body: JSON.stringify({ shopName: shopName, amount: amount }),
+})
+
     .then(response => response.text())
     .then(result => {
       console.log(result); // Log response from Google Apps Script
