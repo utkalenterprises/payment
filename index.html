@@ -126,6 +126,7 @@
   if (shopName && amount) {
     fetch('https://script.google.com/macros/s/AKfycbw4ftIZFaqH46E1sJT-cKiB6a4xW2tBebuzJipaxaGAM6Uqtcq39MwWokTiHpOIjKwv/exec', { // Replace with your Google Apps Script URL
       method: 'POST',
+         mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json',
       },
