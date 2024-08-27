@@ -119,32 +119,34 @@
 
     <script>
         function makePayment() {
-            const shopName = document.getElementById('shopName').value;
-            const amount = document.getElementById('amount').value;
-            const upiId = 'paytmqr281005050101cpjybwznm3x0@paytm'; // Replace with your UPI ID
+  const shopName = document.getElementById('shopName').value;
+  const amount = document.getElementById('amount').value;
+  const upiId = 'paytmqr281005050101cpjybwznm3x0@paytm'; // Replace with your UPI ID
 
-            if (shopName && amount) {
-                // Send data to Google Sheets
-                fetch('https://script.google.com/macros/s/AKfycbw4ftIZFaqH46E1sJT-cKiB6a4xW2tBebuzJipaxaGAM6Uqtcq39MwWokTiHpOIjKwv/exec', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ shopName: shopName, amount: amount }),
-                })
-                .then(response => {
-                    // Handle the UPI payment after sending the data to Google Sheets
-                    const upiLink = `upi://pay?pa=${upiId}&pn=UTKAL ENTERPRISES&am=${amount}&cu=INR&tn=${encodeURIComponent(shopName)}`;
-                    window.location.href = upiLink;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error logging payment.');
-                });
-            } else {
-                alert('Please enter both Shop Name/Invoice Number and Amount.');
-            }
-        }
+  if (shopName && amount) {
+    fetch('https://script.google.com/macros/s/AKfycbw4ftIZFaqH46E1sJT-cKiB6a4xW2tBebuzJipaxaGAM6Uqtcq39MwWokTiHpOIjKwv/exec', { // Replace with your Google Apps Script URL
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ shopName: shopName, amount: amount }),
+    })
+    .then(response => response.text())
+    .then(result => {
+      console.log(result); // Log response from Google Apps Script
+      // Handle the UPI payment
+      const upiLink = `upi://pay?pa=${upiId}&pn=UTKAL ENTERPRISES&am=${amount}&cu=INR&tn=${encodeURIComponent(shopName)}`;
+      window.location.href = upiLink;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Error logging payment.');
+    });
+  } else {
+    alert('Please enter both Shop Name/Invoice Number and Amount.');
+  }
+}
+
     </script>
 
 </body>
