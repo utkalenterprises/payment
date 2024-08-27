@@ -124,30 +124,22 @@
   const upiId = 'paytmqr281005050101cpjybwznm3x0@paytm'; // Replace with your UPI ID
 
   if (shopName && amount) {
-    fetch('https://script.google.com/macros/s/AKfycbw4ftIZFaqH46E1sJT-cKiB6a4xW2tBebuzJipaxaGAM6Uqtcq39MwWokTiHpOIjKwv/exec', {
-    method: 'POST',
-    mode: 'no-cors', // This bypasses CORS, but you won't be able to handle the response
-    headers: {
+    fetch('https://script.google.com/macros/s/AKfycbw4ftIZFaqH46E1sJT-cKiB6a4xW2tBebuzJipaxaGAM6Uqtcq39MwWokTiHpOIjKwv/exec', { // Replace with your Google Apps Script URL
+      method: 'POST',
+      headers: {
         'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ shopName: shopName, amount: amount }),
-})
-
-    .then(response => response.text())
-    .then(result => {
-      console.log(result); // Log response from Google Apps Script
-      // Handle the UPI payment
-      const upiLink = `upi://pay?pa=${upiId}&pn=UTKAL ENTERPRISES&am=${amount}&cu=INR&tn=${encodeURIComponent(shopName)}`;
-      window.location.href = upiLink;
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert('Error logging payment.');
+      },
+      body: JSON.stringify({ shopName: shopName, amount: amount }),
     });
+
+    // Handle the UPI payment
+    const upiLink = `upi://pay?pa=${upiId}&pn=UTKAL ENTERPRISES&am=${amount}&cu=INR&tn=${encodeURIComponent(shopName)}`;
+    window.location.href = upiLink;
   } else {
     alert('Please enter both Shop Name/Invoice Number and Amount.');
   }
 }
+
 
     </script>
 
