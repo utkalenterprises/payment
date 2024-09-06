@@ -78,7 +78,8 @@
             color: #555;
         }
 
-        input, textarea {
+        input,
+        textarea {
             width: calc(100% - 20px);
             padding: 12px;
             border: 1px solid #ddd;
@@ -87,7 +88,8 @@
             transition: border-color 0.3s;
         }
 
-        input:focus, textarea:focus {
+        input:focus,
+        textarea:focus {
             border-color: #007bff;
             outline: none;
         }
@@ -134,15 +136,19 @@
     <div class="container">
         <h1>Payment Terms and Conditions</h1>
         <p>
-            Welcome to Utkal Enterprises. Before making any payments, please review our terms and conditions thoroughly. By proceeding with payment, you agree to comply with the terms outlined below.
+            Welcome to Utkal Enterprises. Before making any payments, please review our terms and conditions thoroughly.
+            By proceeding with payment, you agree to comply with the terms outlined below.
         </p>
         <p>
-            <strong>Interest-Free Period and Late Fees:</strong> An interest-free period of 15 days is provided on all outstanding balances. After the 15-day period, a compounding interest rate of 0.5% per day is applied to any outstanding amount.
+            <strong>Interest-Free Period and Late Fees:</strong> An interest-free period of 15 days is provided on all
+            outstanding balances. After the 15-day period, a compounding interest rate of 0.5% per day is applied to
+            any outstanding amount.
         </p>
 
         <div class="example">
             <strong>Example:</strong><br>
-            If an outstanding amount of ₹1000 remains unpaid after 15 days, the interest will start compounding daily at 0.5%.<br><br>
+            If an outstanding amount of ₹1000 remains unpaid after 15 days, the interest will start compounding daily
+            at 0.5%.<br><br>
             <strong>Calculation:</strong><br>
             Day 1: ₹1000 + 0.5% of ₹1000 = ₹1005<br>
             Day 2: ₹1005 + 0.5% of ₹1005 = ₹1010.03<br>
@@ -163,6 +169,14 @@
             <div class="form-group">
                 <label for="phone">Phone Number</label>
                 <input type="text" id="phone" placeholder="Enter your phone number" required>
+            </div>
+            <div class="form-group">
+                <label for="aadhaar">Aadhaar Number</label>
+                <input type="text" id="aadhaar" placeholder="Enter your Aadhaar number" required>
+            </div>
+            <div class="form-group">
+                <label for="pan">PAN Number</label>
+                <input type="text" id="pan" placeholder="Enter your PAN number" required>
             </div>
             <div class="form-group">
                 <label for="address">Address</label>
@@ -187,21 +201,48 @@
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
+            const aadhaar = document.getElementById('aadhaar').value;
+            const pan = document.getElementById('pan').value;
             const address = document.getElementById('address').value;
 
-            // Add content to the PDF
-            doc.text("Utkal Enterprises - Payment Terms and Conditions", 10, 10);
-            doc.text(`Name: ${name}`, 10, 20);
-            doc.text(`Email: ${email}`, 10, 30);
-            doc.text(`Phone: ${phone}`, 10, 40);
-            doc.text(`Address: ${address}`, 10, 50);
-            doc.text("Terms and Conditions:", 10, 60);
-            doc.text("1. Interest-Free Period: 15 days.", 10, 70);
-            doc.text("2. Compounding Interest: 0.5% per day after 15 days.", 10, 80);
-            doc.text("3. Example: ₹1000 balance compounds daily after the free period.", 10, 90);
+            // Add company header and styling to the PDF
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(18);
+            doc.text("UTKAL ENTERPRISES", 10, 15);
+            doc.setFontSize(12);
+            doc.text("Payment Terms and Conditions", 10, 25);
+            doc.setFontSize(10);
+            doc.text("Address: Balasore, Odisha, India", 10, 32);
+            doc.text("Email: info@utkalenterprises.com", 10, 37);
+            doc.text("Phone: +91-1234567890", 10, 42);
+
+            // Customer details
+            doc.setFont("helvetica", "normal");
+            doc.text("Customer Details:", 10, 52);
+            doc.text(`Name: ${name}`, 10, 58);
+            doc.text(`Email: ${email}`, 10, 64);
+            doc.text(`Phone: ${phone}`, 10, 70);
+            doc.text(`Aadhaar: ${aadhaar}`, 10, 76);
+            doc.text(`PAN: ${pan}`, 10, 82);
+            doc.text(`Address: ${address}`, 10, 88);
+
+            // Payment Terms and Conditions
+            doc.text("Terms and Conditions:", 10, 98);
+            doc.text("1. Interest-Free Period: 15 days.", 10, 104);
+            doc.text("2. Compounding Interest: 0.5% per day after the 15-day period.", 10, 110);
+            doc.text("3. Example: ₹1000 balance compounds daily after the free period.", 10, 116);
+            doc.text("4. Payment must be made within the terms outlined to avoid additional charges.", 10, 122);
+            doc.text("5. Failure to comply with payment terms may result in suspension of services.", 10, 128);
+            doc.text("6. Please contact us for any discrepancies or disputes regarding payments.", 10, 134);
+            doc.text("7. All payments are subject to the terms and conditions mentioned above.", 10, 140);
+
+            // Footer
+            doc.setFontSize(9);
+            doc.text("Thank you for choosing Utkal Enterprises. We value your business.", 10, 150);
+            doc.text("For further inquiries, please contact our customer service.", 10, 156);
 
             // Save the PDF
-            doc.save('Utkal_Enterprises_Terms_And_Conditions.pdf');
+            doc.save('Utkal_Terms_and_Conditions.pdf');
         }
     </script>
 
