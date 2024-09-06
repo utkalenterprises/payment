@@ -192,6 +192,9 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
+        // Base64 encoded string of your logo image
+        const logoBase64 = "data:image/png;base64,..."; // Replace '...' with your logo's Base64 string
+
         // Function to generate PDF with form data and terms
         function generatePDF() {
             const { jsPDF } = window.jspdf;
@@ -205,41 +208,50 @@
             const pan = document.getElementById('pan').value;
             const address = document.getElementById('address').value;
 
+            // Add logo image
+            doc.addImage(logoBase64, 'PNG', 10, 10, 30, 30);
+
             // Add company header and styling to the PDF
             doc.setFont("helvetica", "bold");
             doc.setFontSize(18);
-            doc.text("UTKAL ENTERPRISES", 10, 15);
+            doc.text("UTKAL ENTERPRISES", 50, 20);
             doc.setFontSize(12);
-            doc.text("Payment Terms and Conditions", 10, 25);
+            doc.text("Payment Terms and Conditions", 50, 30);
             doc.setFontSize(10);
-            doc.text("Address: Balasore, Odisha, India", 10, 32);
-            doc.text("Email: info@utkalenterprises.com", 10, 37);
-            doc.text("Phone: +91-1234567890", 10, 42);
+            doc.text("Address: Balasore, Odisha, India", 50, 37);
+            doc.text("Email: info@utkalenterprises.com", 50, 42);
+            doc.text("Phone: +91-1234567890", 50, 47);
 
             // Customer details
             doc.setFont("helvetica", "normal");
-            doc.text("Customer Details:", 10, 52);
-            doc.text(`Name: ${name}`, 10, 58);
-            doc.text(`Email: ${email}`, 10, 64);
-            doc.text(`Phone: ${phone}`, 10, 70);
-            doc.text(`Aadhaar: ${aadhaar}`, 10, 76);
-            doc.text(`PAN: ${pan}`, 10, 82);
-            doc.text(`Address: ${address}`, 10, 88);
+            doc.text("Customer Details:", 10, 60);
+            doc.text(`Name: ${name}`, 10, 66);
+            doc.text(`Email: ${email}`, 10, 72);
+            doc.text(`Phone: ${phone}`, 10, 78);
+            doc.text(`Aadhaar: ${aadhaar}`, 10, 84);
+            doc.text(`PAN: ${pan}`, 10, 90);
+            doc.text(`Address: ${address}`, 10, 96);
 
             // Payment Terms and Conditions
-            doc.text("Terms and Conditions:", 10, 98);
-            doc.text("1. Interest-Free Period: 15 days.", 10, 104);
-            doc.text("2. Compounding Interest: 0.5% per day after the 15-day period.", 10, 110);
-            doc.text("3. Example: ₹1000 balance compounds daily after the free period.", 10, 116);
-            doc.text("4. Payment must be made within the terms outlined to avoid additional charges.", 10, 122);
-            doc.text("5. Failure to comply with payment terms may result in suspension of services.", 10, 128);
-            doc.text("6. Please contact us for any discrepancies or disputes regarding payments.", 10, 134);
-            doc.text("7. All payments are subject to the terms and conditions mentioned above.", 10, 140);
+            doc.text("Terms and Conditions:", 10, 106);
+            doc.text("1. Interest-Free Period: 15 days.", 10, 112);
+            doc.text("2. Compounding Interest: 0.5% per day post 15 days on outstanding balance.", 10, 118);
+            doc.text("3. Payments should be made within the stipulated time to avoid penalties.", 10, 124);
+            doc.text("4. Credit terms are subject to approval and review by Utkal Enterprises.", 10, 130);
+            doc.text("5. The company reserves the right to change terms at any time without notice.", 10, 136);
 
-            // Footer
+            // Example Calculation
+            doc.text("Example Calculation:", 10, 146);
+            doc.text("Outstanding Amount: ₹1000", 10, 152);
+            doc.text("Interest Calculation (post 15 days):", 10, 158);
+            doc.text("Day 1: ₹1000 + 0.5% = ₹1005", 10, 164);
+            doc.text("Day 2: ₹1005 + 0.5% = ₹1010.03", 10, 170);
+            doc.text("Day 3: ₹1010.03 + 0.5% = ₹1015.08", 10, 176);
+
+            // Footer notes
             doc.setFontSize(9);
-            doc.text("Thank you for choosing Utkal Enterprises. We value your business.", 10, 150);
-            doc.text("For further inquiries, please contact our customer service.", 10, 156);
+            doc.text("Thank you for choosing Utkal Enterprises. We value your business.", 10, 185);
+            doc.text("For further inquiries, please contact our customer service.", 10, 190);
 
             // Save the PDF
             doc.save('Utkal_Terms_and_Conditions.pdf');
