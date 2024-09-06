@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Terms and Conditions</title>
+    <title>UPI Payment</title>
     <style>
-        /* Basic styling */
+        /* Basic styling for body */
         body {
             font-family: 'Roboto', sans-serif;
             background-color: #f4f8fb;
-            color: #333;
-            margin: 0;
-            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin: 0;
+            padding: 0;
+            color: #333;
         }
 
-        /* Header section */
-        .header {
+        /* Header and footer styling */
+        .header, .footer {
             width: 100%;
             padding: 15px;
             background-color: #007bff;
@@ -32,17 +32,18 @@
             margin-right: 10px;
         }
 
-        /* Main content container */
+        /* Main container styling */
         .container {
             background-color: #ffffff;
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
+            max-width: 450px;
             width: 90%;
             margin: 30px 0;
         }
 
+        /* Heading styling */
         h1 {
             text-align: center;
             color: #007bff;
@@ -50,40 +51,72 @@
             margin-bottom: 20px;
         }
 
-        p {
-            line-height: 1.6;
+        /* Form group and labels styling */
+        .form-group {
             margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
             color: #555;
         }
 
+        /* Input fields styling */
+        input[type="text"], input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
         /* Button styling */
-        .button {
+        button {
             display: block;
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 6px;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
-            text-align: center;
-            text-decoration: none;
             transition: background-color 0.3s, transform 0.2s;
         }
 
-        .button:hover {
+        button:hover {
             background-color: #0056b3;
             transform: translateY(-2px);
         }
 
-        /* Footer section */
+        /* Payment logos section */
+        .payment-logos {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .payment-logos img {
+            height: 40px;
+            margin: 0 10px;
+        }
+
+        /* Footer styling */
         .footer {
-            width: 100%;
-            padding: 15px;
+            padding: 20px;
+            font-size: 14px;
             background-color: #007bff;
             color: white;
             text-align: center;
+            width: 100%;
         }
     </style>
 </head>
@@ -95,30 +128,73 @@
     </div>
 
     <div class="container">
-        <h1>Payment Terms and Conditions</h1>
-        <p>
-            Welcome to Utkal Enterprises. Before making any payments, please review our terms and conditions thoroughly. By proceeding with payment, you agree to comply with the terms outlined below.
-        </p>
-        <p>
-            <strong>1. Payment Policy:</strong> All payments made through our platform are processed securely. Please ensure that you review your invoice and payment details before proceeding.
-        </p>
-        <p>
-            <strong>2. Refunds and Cancellations:</strong> Payments made are non-refundable once processed, unless specified otherwise in writing by Utkal Enterprises. Cancellation requests must be submitted in writing within 24 hours of the transaction.
-        </p>
-        <p>
-            <strong>3. Credit Line:</strong> To qualify for a credit line, customers must complete the onboarding process, which involves filling out our credit line form. Approval is subject to terms and conditions.
-        </p>
-        <p>
-            <strong>4. Contact Us:</strong> For any payment-related inquiries or issues, please contact our customer service team at support@utkalenterprises.in.
-        </p>
+        <h1>UPI Payment</h1>
+        <div class="form-group">
+            <label for="shopName">Shop Name / Invoice Number</label>
+            <input type="text" id="shopName" placeholder="Enter Shop Name or Invoice Number">
+        </div>
+        <div class="form-group">
+            <label for="amount">Amount (INR)</label>
+            <input type="number" id="amount" placeholder="Enter Amount">
+        </div>
+        <button onclick="makePayment()">Pay Now</button>
 
-        <!-- Button to Google Form -->
-        <a href="https://forms.gle/your-google-form-link" target="_blank" class="button">Onboard for Credit Line</a>
+        <div class="payment-logos">
+            <img src="certificate1.png" alt="Certificate Logo 1">
+            <img src="certificate2.png" alt="Certificate Logo 2">
+            <img src="certificate3.png" alt="Certificate Logo 3">
+        </div>
     </div>
 
     <div class="footer">
         &copy; 2024 UTKAL ENTERPRISES. All Rights Reserved.
     </div>
+
+    <script>
+        // Function to get URL parameters safely, encoding special characters
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Prefill form fields based on URL parameters, with decoding applied
+        window.onload = function() {
+            const shopName = decodeURIComponent(getQueryParam('shopName') || '');
+            const amount = decodeURIComponent(getQueryParam('amount') || '');
+
+            if (shopName) {
+                document.getElementById('shopName').value = shopName;
+            }
+            if (amount) {
+                document.getElementById('amount').value = amount;
+            }
+        };
+
+        // Function to handle the payment process
+        function makePayment() {
+            const shopName = document.getElementById('shopName').value;
+            const amount = document.getElementById('amount').value;
+            const upiId = 'paytmqr281005050101cpjybwznm3x0@paytm'; // Replace with your UPI ID
+
+            if (shopName && amount) {
+                // Send data to Google Apps Script
+                fetch('https://script.google.com/macros/s/AKfycbw4ftIZFaqH46E1sJT-cKiB6a4xW2tBebuzJipaxaGAM6Uqtcq39MwWokTiHpOIjKwv/exec', { // Replace with your Google Apps Script URL
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ shopName: shopName, amount: amount }),
+                });
+
+                // Handle the UPI payment with encoded parameters
+                const upiLink = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=UTKAL ENTERPRISES&am=${encodeURIComponent(amount)}&cu=INR&tn=${encodeURIComponent(shopName)}`;
+                window.location.href = upiLink;
+            } else {
+                alert('Please enter both Shop Name/Invoice Number and Amount.');
+            }
+        }
+    </script>
 
 </body>
 </html>
