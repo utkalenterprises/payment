@@ -1,25 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Terms and Conditions</title>
+    <title>Credit Line Onboarding Form</title>
     <style>
         /* Basic styling */
         body {
             font-family: 'Roboto', sans-serif;
             background-color: #f4f8fb;
-            color: #333;
-            margin: 0;
-            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin: 0;
+            padding: 0;
+            color: #333;
         }
 
-        /* Header section */
-        .header {
+        .header, .footer {
             width: 100%;
             padding: 15px;
             background-color: #007bff;
@@ -33,13 +31,12 @@
             margin-right: 10px;
         }
 
-        /* Main content container */
         .container {
             background-color: #ffffff;
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
+            max-width: 600px;
             width: 90%;
             margin: 30px 0;
         }
@@ -51,22 +48,6 @@
             margin-bottom: 20px;
         }
 
-        p {
-            line-height: 1.6;
-            margin-bottom: 20px;
-            color: #555;
-        }
-
-        .example {
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-left: 4px solid #007bff;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        /* Form styling */
         .form-group {
             margin-bottom: 20px;
         }
@@ -78,8 +59,7 @@
             color: #555;
         }
 
-        input,
-        textarea {
+        input, select {
             width: calc(100% - 20px);
             padding: 12px;
             border: 1px solid #ddd;
@@ -88,101 +68,66 @@
             transition: border-color 0.3s;
         }
 
-        input:focus,
-        textarea:focus {
+        input:focus, select:focus {
             border-color: #007bff;
             outline: none;
         }
 
-        /* Button styling */
-        .button {
+        button {
             display: block;
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 6px;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
-            text-align: center;
             transition: background-color 0.3s, transform 0.2s;
-            margin-top: 10px;
         }
 
-        .button:hover {
+        button:hover {
             background-color: #0056b3;
             transform: translateY(-2px);
         }
-
-        /* Footer section */
-        .footer {
-            width: 100%;
-            padding: 15px;
-            background-color: #007bff;
-            color: white;
-            text-align: center;
-        }
     </style>
 </head>
-
 <body>
 
     <div class="header">
-        <img src="logo.png" alt="Utkal Enterprises Logo">
+        <img src="data:image/png;base64,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<<OutputTruncated>>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 &#8203;:contentReference[oaicite:0]{index=0}&#8203;
+" alt="Utkal Enterprises Logo"> <!-- Insert your base64 logo -->
         <span>UTKAL ENTERPRISES</span>
     </div>
 
     <div class="container">
-        <h1>Payment Terms and Conditions</h1>
-        <p>
-            Welcome to Utkal Enterprises. Before making any payments, please review our terms and conditions thoroughly.
-            By proceeding with payment, you agree to comply with the terms outlined below.
-        </p>
-        <p>
-            <strong>Interest-Free Period and Late Fees:</strong> An interest-free period of 15 days is provided on all
-            outstanding balances. After the 15-day period, a compounding interest rate of 0.5% per day is applied to
-            any outstanding amount.
-        </p>
-
-        <div class="example">
-            <strong>Example:</strong><br>
-            If an outstanding amount of ₹1000 remains unpaid after 15 days, the interest will start compounding daily
-            at 0.5%.<br><br>
-            <strong>Calculation:</strong><br>
-            Day 1: ₹1000 + 0.5% of ₹1000 = ₹1005<br>
-            Day 2: ₹1005 + 0.5% of ₹1005 = ₹1010.03<br>
-            Day 3: ₹1010.03 + 0.5% of ₹1010.03 = ₹1015.08<br>
-            ... and so on.
-        </div>
-
-        <h2>Credit Line Onboarding Form</h2>
+        <h1>Credit Line Onboarding Form</h1>
         <form id="onboardingForm">
             <div class="form-group">
                 <label for="name">Full Name</label>
-                <input type="text" id="name" placeholder="Enter your full name" required>
+                <input type="text" id="name" name="name" placeholder="Enter your full name" autocomplete="name">
             </div>
             <div class="form-group">
                 <label for="email">Email Address</label>
-                <input type="email" id="email" placeholder="Enter your email address" required>
+                <input type="email" id="email" name="email" placeholder="Enter your email" autocomplete="email">
             </div>
             <div class="form-group">
                 <label for="phone">Phone Number</label>
-                <input type="text" id="phone" placeholder="Enter your phone number" required>
+                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" autocomplete="tel">
             </div>
             <div class="form-group">
-                <label for="aadhaar">Aadhaar Number</label>
-                <input type="text" id="aadhaar" placeholder="Enter your Aadhaar number" required>
+                <label for="address">Street Address</label>
+                <input type="text" id="street-address" name="street-address" placeholder="Enter your address" autocomplete="street-address">
+            </div>
+            <div class="form-group">
+                <label for="aadhar">Aadhaar Number</label>
+                <input type="text" id="aadhar" name="aadhar" placeholder="Enter your Aadhaar number" autocomplete="off">
             </div>
             <div class="form-group">
                 <label for="pan">PAN Number</label>
-                <input type="text" id="pan" placeholder="Enter your PAN number" required>
+                <input type="text" id="pan" name="pan" placeholder="Enter your PAN number" autocomplete="off">
             </div>
-            <div class="form-group">
-                <label for="address">Address</label>
-                <textarea id="address" rows="3" placeholder="Enter your address" required></textarea>
-            </div>
-            <button type="button" class="button" onclick="generatePDF()">Submit and Generate PDF</button>
+            <button type="submit">Submit</button>
         </form>
     </div>
 
@@ -190,75 +135,5 @@
         &copy; 2024 UTKAL ENTERPRISES. All Rights Reserved.
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script>
-        // Base64 encoded string of your logo image
-        const logoBase64 = "data:image/png;base64,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<<OutputTruncated>>jiJUiESbnhJwTYqXSqXUmctaSszERCRlVW2pwCZEtiZY5e9nyhpO3vG3Nt26+sffzd25ZuYeZF9QiEwAALj2X/JT769V2YldFJCSqm+xf035kerj8nZKdbw7nKy3sqIk1NbD2stpT1svSRGM+P5Iv+KPtfmaqqYlKRGQvpYH8tN/8zStmjk7PP5PLZs3LBwbL88XydTaJW5h8o9hLo9zTjMZ0j4DlNNNdhNgmtTCLNDVOq7Te3qX528QqosBPXFtDdvqaq5Y8t+m6VY+sXdyynxYaSQUAAJekX7g79J/lDVoHEl2gtnpvhR0iOnlspOm53S9dt/dHx+4eHJy4bb4kPaT8gHVGiTbslCYhnYYdCadpVWksJzlnidmlN/DiyIkjpRKqzyXJssX1E9dcsfjp27dc+YV1nfXPrljR9JY10AEAgIvrF+4O/Wf5ZWgduJ3Z3i8ydVdb6dn2Vu/Uj/blDgwcnbhpej7uLYZRu3WuIKK1E1ZSi5UUYWan0lhULSQuErEhGW0l8Ml2ttUXe1d3Hlp7ede3Nl67+rElK3oOrGh+a+vtAQDg4vqlukP/ZSMi+uEnjtSdODq5/Ojw1DUHBoY2jk8V15UrUXclss2VMMqGYWyIFGttlDGGsxmftLKUDZRd1NFQ7e5oHll7+fJnr1rf8dVlXc0vrFuWHh8bDnU5PMkqSHEWahNGnChZyICl4wFscOAxGsh0eRWOKr0U3R3S3tWt1fWfNrUdo4bQ3cytlF2WWqgMywNRYGDO5puGa1B7zxfzd0AHCUgcn0lQQdSQFpDsc5qFgFQhUm+QpPlWr0XXU+3HxuHf8DgiEifC2ftFPOwW2ePfPxdRLRZANdTl2Vc2lrByyyY5amjKnQHVFFJY9yoUAHCJiCUApJoLadXV3Oq8tJSTNnp+weNz+ZH4EAqF5dC0UwgklIojF5UbiOee73K2rnJgPL1nJdmVlOrRKF6U2vBKHdAwFVp2CZm4Etp+ROIlGYglchUTP0goEzYgNCqvnp21VLYJ5w//tV3/zYrqtwE2l1VcMgGhAJVpBfJl0sXrnltvuu2/nqaudSoK5CjKKUnynhnNc4gUAFyRC8GnBASyAUbgbq3bd/Z7tlPOy69k1ZG+uMfBBKUSNRfH70tSt1ll+MLes0ddVG2pVTaIzBZASp0cglsgBf6gCE0NOUl5f8btyqTVeWQOUFd4CdfYVSAR0//2RbbiUkBdgoIA9CPVRm7RTJoiWUhCdjUK6QaYmn6L+uvvwEb9sAy1YRAHc6XlOnhz8qGJlI81JsN2la1G6JSNffICNwpzLuw9AFBwEhJIlo7gRB6JhJutOgzq15FJIFMc1H8PQBUP9GrkCgSMDBj2U8DpYyxoZbJ9qEpLKBPav7F63u/PzzvOySe4gDdPUPBbBkKKqkw0LUwk1Sp0SRTHax5kAAH8cbCtBPcYCN1RgUSGoP8OKBAhNhDfo2Rp7J0lGLTBA2hW8YV02UmSOkTAy8ljLRL+WKRGwFP7QNoeIqFaZzHXTxxOVsNmFVdDaWiD+ck7aDbaA7BUNSYiKiKhCWgohoYvQj5pT1MpUMgMRuQFN6mQNRiUhAoQoCkmSc6DF4rTDIobmjBaPgFGd7XNBV9tIIQG9StS9slCm0RGsmEyLBsVoe08lXBr3rYOeqDlpxydZb6GVuALlkSxhJzGKVfjdCbKAEUkgSQzZ2ClAOAiIvBHyjW9O2AtImfE2n7Kpqi+09y47DWE+XEmWq0mpZ9bQVStB3wpl9N4KZirTA5qJQQEYekBYB/08Skl8TbZ9//4ep7yCZZUw8Lp5JWGVbmFMEzViLNVonD2p4mjENM9s2H0FrbSqGTO5DKJsyQiWIJSRTnibFAP6wEAIhDAyL8nNUbUU8KBJuNg7FgOGqlFQK1nLV7C0CpIpYIDhtpy9pgNcayADHAHLFFMpANAsB0USuU2XCAWC+TlBUFWqE6+TLfKoNJ8elIdA4BFbUQAI7csakFYvCVoc5mSNTbDF8aVFQ7yIKCRnH6gs02CJ5OoTrpNeSCh0hmkgzmgdIAFGcVoJ4qDEngAjyFCWa0ANWrBNgZBQEcABeywbCIOrc4EdNYocMBLTJD2W5BhGsXg0CJJBbq5N5D0RVvQrIjCwEQlaT0TbDOk1t5mrLhtqRMFtByWiZDuzpC3cIKM4mbUgIIwNjprx/0My4DYlhyYQqTOww3E+u1eJhZLVZpJDINMEzCg5IkYfYSlHtDU5wgIIUeYZo3ixcAyoayEDJhIYllSkwYBBiLSnZhtEGRZgjw6tg0NtaJARipKkgAoAReMBrABnDXYEGAyGCCu+ZIrPErPBMsoHnoItUmNzlm0hABjCyYrS6MRVShXIFhpTCUKIEyYQUqTYGClT3hS22LVgxiJ60gnMkUiUbikYEJ5yYjE1hsyJaGaAHEwqPCUoU5DAUkaWlMcRhLA1JIsM1tTtB1QNogAkZugrN4LiUleAnR6NiMbDRnOigpY05SOoQzILguwpNEnnPqGDJWBBKHXiQgCV1KhskhN6Ey1zLgpDkU5RoQLVJeUlEUFoKOkEmgjpRhig+5kUTVAJJA1AChSmDFvNhFNBopQhD8AlDDdMBiLiFKHCUqXKwUK0JSAEQzkGkZXci9jFcRDTaAFCCmBJq7IXP/JIgMwyLFESMKSaJ8gKoDCiDgYqoIHSQBhPpl2Q6Z/ksmkBQEENBmMcVRm/8QiSShQg8K8jwaCaK00AkFiUsAhkhgiBJBEOoUCc3KYipFExKTptNCyKhBMpIFBLG8DNykhE8RRaIEA3Th3GjCBiOQQ4AIKAVQyiGxXgnFZFkEYV9xVquZUmrpNEeAKBkSSUQcQLQSQkAQAaYAWFLCkhQ1NgyFjcZobptIwEoBlIkUYiAHggFI0kIQMQGiFAClIZMKST5XFFHTpJADAYRgmAelUy1LFDRaxLxsQ5JaSsiIImtRIQsWiFgGADAYFoEopUWFn4fhcPy4AWsIibEimARpROjVEEIRG1AoToz5SMICiAayCiYgMIihIRHEuI4LkuigAWooBlJIgQLJnpPOMCTzSzYgguRBEogokgyUojdBmlIMlEC7AEJQuQCKgUJ+RVLUXRDsiQAQCKmElEqakwo0IbghxBS5KhAPQolSiIka6oEACFMAYCYFUmAFQ4EKKHBZKABiDpAQIkZMCGFEZhFkz4sz1otRgwKgMFgok0gkUIE0ngkCMZhwiwSa1kBQ2SDlNmERZUgQgmSRpLqElX3QQQiRAwgQFMA8TgoDwRpJc/3y3JzFWABBUZ9ThPTcPlmsiwr5M8F8AloLSGItuAHpPFx5gtiFpgiXIlIhFJiNskFJAwAAtRGCUhNoDBQizkRBPLVHQKAtOBFM5JAbJkzwhn7akSY/BBFt6RBFN4glTBIRTLVCJEFyBDkIlAJW0CHETRlYRhPYohIoZTiADOkWknKI0AIFgHyWKi/PE1KrAKTWk4mAAKK8TKhDZlICM+RPFAoym0JDECEkBRCyQsKAlSaSSZGYoFCiCErSRQwRLcikmk0LUCJIkUyYAjEtOSJL5J0owhmBkGZZkRTAkpTBSS5QjCXEJNcpEkJUlMEoEXtAxKMppgEKEAEElMkXKwDppKqLGJRTEwiUFJAkKSIzHpIBMFYHOSmUwRhAK2bPEIoKagmk4AMpBEWiFLZGQhAJKaClCwIQTKBGM7JKWogpTnSiAKEhFRIwBThZCmEnTOEDNBIM4aUwkgh+hpAXEsLqSFAAWAWiAEEkpDggBUCsgYA5IxTCKExjCAQDCFkBS3MB6aKqB9t1MOLAPBGDQAxAk8kgUklFUlwNATLKgmLEQFgIZ4AA+IBJKkTwRaS4lMkMg5AgSTJmFCEIEElxYAzQKZXURVklICRJLMD0XBFABYyUAOTQCgJNSmNKGoRV+EmKoyohxGMYwi6DWAAIk3EDCBUE0RlUZLYUtBqSo0SCQYZlxVZlFKMowU+WZIoQmswNCQQFqCoU8IRzBWmJKSIlMaZCxRGzAcgxU0hRmimGCfOhmZgzWgDN+JAXIKomC4AxGFkDE2lNoMIpDWgMlPZAp3GqRizxlxAHRmRlUKCIqkViGnFlBmhPQQoAAokpMBgmXkxTJZGUxxM0aAAMtQ5AJzjAFcyHQ3yoUt1KgAEGVCFLVBRFYQEsFUBkFRwgBAM3hICRgmKnFf0DEmgZGUsAaMgEYBlDQYZjCEFNQ0VIRlTiHFVwEYVIkRVLBVMigAGgpFgAcUUAQkwDVwhVAjUI4wWRKEAmhxGYD1QTANcGZTQQAiMgUKSKYkQMKtNENAxBN0QoiShUAlWwoNkS4I0GcwTUA0lAZBlIAByijCsXgaRAVgoF0Ai6RQIaUYYIi3AIkThED6BtMT0mwBGCWSokmIYiwIAaSFSFBTTQVUgAAKBQNMKzS0cYRTAr0BYkNkNgBxxQXCCQqSklMplAW0KNmQxoGgUMkkVMZRrQoog4KySSg0EETDlOMQAy0QahML1S1IKP7DD6UUMLgs0tEM2Qd2IAYwkkzgTWK4To2IwEhWkyRlNExWRgJmRHKK5oFBQhJ1RCCoEZRVMElFZDAWiAAIwNgP9gpFAUwAKRYAE0pFkYoUOUiwCDRMULAYCAGFSaa0AyKqJIqwzAAGXAGoAhWI0m1WbQoDKwlwGJDMEFRUFGQlFDAdOEEV2gDUAEAIKTAACAUFS0mA1AEQMhVVUDFWAAYQGhxAWhWSBUARUAoFUegqCgJMAgEBM4+IYUA4DEsCEJJFAJAIASgFIgNCokTBCiFhgaIQZkxggAFsAGnAbgUgsIi7IUk0xkmEBA0+TVDcCGJIImSB1Az5UTgimFAJJFE3ilAJYBKESYFFAYSwUgRAgARSkQ6DoLQAlDZEUQywlAFCYMQFRCmURVUSmXYDVQvwwSFUwhBFQHGRYvUjEF0AARABEXBAmMRQSQwIFACAkSAwMyFQpMkI0UwFQRU1VSiw4gQwhKEJoGAQRYmkFqwoU0BiwACkTiQGhhWE0JR3BRDBmAoYyLAg0gdGgBlSBMKkhIGgAKAlAWgCZFHQUxgCNMBqIqABOBAgwIKFlhQaGVAFtAjEXBJDJEgUiZUYAVRZmgMlCBMlTAkVpDDTFYJmRAolMRgNULCUgmClBEAmDAIIIG1JF2gKMKkUgsAiDIAlUAEgIBAKQICZFRFCBMBmRVlRQUAiCTSwB0XUMYkxkAiIIFSIgIgCHAUlXwA0nIC6iwFmKAXQSBgRgQEmEgQwpA4mQABlIEQlUTBKCSwwEYQxSIkXYAAjEwxXCSVULzmhRJCk1FYmkIoABJRRFSkIU9FQwgoYwhAUIBAsJZBJKAJRCQ3VQYBEAxIiBGG5AAFQVMCkSJ2BQABUgokcYhJiCgUQOKgnIArRgCRSkgoFM1AYQgJCHDFNBEAgSBRAUFSkwLKIhQBUCFxlCNKCWRSBQAhFSaTZAsDJBgJVUWAUgUwKmDi0RgIZR0lFFRY2QGUhYQlUYCwEAFAEERFLSAAYM2MFAJJYAUTQAwVYQFQAVMElZsAFYQVUkigAAjCgBAGFQDVF4DIxEkQ1AVQLECApQIJRDSU0lQnVFMRHRMUlASyCCAwQBAiAyMTARBRBFDQAhBwZgSBTEkUxAACUEAGF1FArQlkVRUCgBNFgWUAOFlTgAAJJyUKJCFgCwhmAUMwSECEQCZQpAAAEFCQEUoIgsBGpMAhgA4FFSRk4aCKURowAGAAAIjGJ2VIkgIVGBIBh8pAAlDAHgBEw4sCJAKUBoEQwSAUyAAjUADQACAAEIAjYDBgFBVEQBVGGAjKJBBBIg4hMwCMFgklUEiFCgFQDQAhQTSCAQgBQBAFETCMCoElkgABJFFwwCSlALMgAEUSAFMAElIgAQRQyWQEBJ0EDEKClMYAQZFYAsUQUSUKSRFFhJUCxJk0lADUUmEBGUMXARUFUUEAAAlAoCiwCwMlAFAVAVgAUgRUFEkIFhlCIATA4CJMSFlICRBYAFQRQAwACgIBQAAklFBgN3M4AFE8ABICQQFgAhUCkkYAQEFzAmhIUAlMFABBDkAlMCUgAMOQQFDwkgEDCFlkIAAwAA1UBUUkCAAAI6QUKAA8DACAIAAlB9IAARiGFAAAAhFBNMA1ADJUAAtBGwA== &#8203;:contentReference[oaicite:0]{index=0}&#8203;
-"; // Replace '...' with your logo's Base64 string
-
-        // Function to generate PDF with form data and terms
-        function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-
-            // Collect form data
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const aadhaar = document.getElementById('aadhaar').value;
-            const pan = document.getElementById('pan').value;
-            const address = document.getElementById('address').value;
-
-            // Add logo image
-            doc.addImage(logoBase64, 'PNG', 10, 10, 30, 30);
-
-            // Add company header and styling to the PDF
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(18);
-            doc.text("UTKAL ENTERPRISES", 50, 20);
-            doc.setFontSize(12);
-            doc.text("Payment Terms and Conditions", 50, 30);
-            doc.setFontSize(10);
-            doc.text("Address: Balasore, Odisha, India", 50, 37);
-            doc.text("Email: info@utkalenterprises.com", 50, 42);
-            doc.text("Phone: +91-1234567890", 50, 47);
-
-            // Customer details
-            doc.setFont("helvetica", "normal");
-            doc.text("Customer Details:", 10, 60);
-            doc.text(`Name: ${name}`, 10, 66);
-            doc.text(`Email: ${email}`, 10, 72);
-            doc.text(`Phone: ${phone}`, 10, 78);
-            doc.text(`Aadhaar: ${aadhaar}`, 10, 84);
-            doc.text(`PAN: ${pan}`, 10, 90);
-            doc.text(`Address: ${address}`, 10, 96);
-
-            // Payment Terms and Conditions
-            doc.text("Terms and Conditions:", 10, 106);
-            doc.text("1. Interest-Free Period: 15 days.", 10, 112);
-            doc.text("2. Compounding Interest: 0.5% per day post 15 days on outstanding balance.", 10, 118);
-            doc.text("3. Payments should be made within the stipulated time to avoid penalties.", 10, 124);
-            doc.text("4. Credit terms are subject to approval and review by Utkal Enterprises.", 10, 130);
-            doc.text("5. The company reserves the right to change terms at any time without notice.", 10, 136);
-
-            // Example Calculation
-            doc.text("Example Calculation:", 10, 146);
-            doc.text("Outstanding Amount: ₹1000", 10, 152);
-            doc.text("Interest Calculation (post 15 days):", 10, 158);
-            doc.text("Day 1: ₹1000 + 0.5% = ₹1005", 10, 164);
-            doc.text("Day 2: ₹1005 + 0.5% = ₹1010.03", 10, 170);
-            doc.text("Day 3: ₹1010.03 + 0.5% = ₹1015.08", 10, 176);
-
-            // Footer notes
-            doc.setFontSize(9);
-            doc.text("Thank you for choosing Utkal Enterprises. We value your business.", 10, 185);
-            doc.text("For further inquiries, please contact our customer service.", 10, 190);
-
-            // Save the PDF
-            doc.save('Utkal_Terms_and_Conditions.pdf');
-        }
-    </script>
-
 </body>
-
 </html>
