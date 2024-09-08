@@ -4,142 +4,154 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Credit Line Onboarding</title>
-    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             background-color: #f4f8fb;
-            margin: 0;
-            padding: 20px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
+            margin: 0;
+            padding: 0;
             color: #333;
         }
+
         .container {
             background-color: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 100%;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+            margin: 30px 0;
         }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
+
         label {
-            font-weight: bold;
             display: block;
-            margin-bottom: 5px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #555;
         }
+
         input {
-            width: calc(100% - 12px);
-            padding: 10px;
+            width: calc(100% - 20px);
+            padding: 12px;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
         }
+
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
         button {
+            display: block;
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background-color: #007bff;
+            color: white;
             border: none;
-            color: #fff;
-            border-radius: 5px;
+            border-radius: 6px;
             font-size: 16px;
             cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
         }
+
         button:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
         }
+
         .success-message {
-            display: none;
             color: green;
-            font-weight: bold;
-            margin-top: 10px;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Credit Line Onboarding</h2>
-    <div class="form-group">
-        <label for="shopName">Shop Name</label>
-        <input type="text" id="shopName" placeholder="Enter Shop Name" required>
+    <div class="container">
+        <h1>Credit Line Onboarding</h1>
+        <div class="form-group">
+            <label for="shopName">Shop Name</label>
+            <input type="text" id="shopName" placeholder="Enter Shop Name">
+        </div>
+        <div class="form-group">
+            <label for="ownerName">Owner Name</label>
+            <input type="text" id="ownerName" placeholder="Enter Owner Name">
+        </div>
+        <div class="form-group">
+            <label for="aadhaarNumber">Aadhaar Number</label>
+            <input type="text" id="aadhaarNumber" placeholder="Enter Aadhaar Number">
+        </div>
+        <div class="form-group">
+            <label for="panNumber">PAN Number</label>
+            <input type="text" id="panNumber" placeholder="Enter PAN Number">
+        </div>
+        <button onclick="submitForm()">Submit</button>
+        <div class="success-message" id="successMessage"></div>
     </div>
-    <div class="form-group">
-        <label for="ownerName">Owner Name</label>
-        <input type="text" id="ownerName" placeholder="Enter Owner Name" required>
-    </div>
-    <div class="form-group">
-        <label for="contactNumber">Contact Number</label>
-        <input type="text" id="contactNumber" placeholder="Enter Contact Number" required>
-    </div>
-    <div class="form-group">
-        <label for="email">Email</label>
-        <input type="text" id="email" placeholder="Enter Email" required>
-    </div>
-    <div class="form-group">
-        <label for="aadhaar">Aadhaar Number</label>
-        <input type="text" id="aadhaar" placeholder="Enter Aadhaar Number" required>
-    </div>
-    <div class="form-group">
-        <label for="pan">PAN Number</label>
-        <input type="text" id="pan" placeholder="Enter PAN Number" required>
-    </div>
-    <button onclick="submitForm()">Submit</button>
-    <div class="success-message" id="successMessage">Successfully applied for credit line!</div>
-</div>
 
-<script>
-    // Firebase Configuration
-    const firebaseConfig = {
-    apiKey: "AIzaSyCaiK6I2ft33OtoNISnJ1UAep6E7jBRfJ0",
-    authDomain: "utkalb2b-web.firebaseapp.com",
-    projectId: "utkalb2b-web",
-    storageBucket: "utkalb2b-web.appspot.com",
-    messagingSenderId: "974973982982",
-    appId: "1:974973982982:web:90a779568f593817c5a687",
-    measurementId: "G-QRX9527XPG"
-    };
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js"></script>
 
-    // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore(app);
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCaiK6I2ft33OtoNISnJ1UAep6E7jBRfJ0",
+            authDomain: "utkalb2b-web.firebaseapp.com",
+            projectId: "utkalb2b-web",
+            storageBucket: "utkalb2b-web.appspot.com",
+            messagingSenderId: "974973982982",
+            appId: "1:974973982982:web:90a779568f593817c5a687",
+            measurementId: "G-QRX9527XPG"
+        };
 
-    function submitForm() {
-        const shopName = document.getElementById('shopName').value;
-        const ownerName = document.getElementById('ownerName').value;
-        const contactNumber = document.getElementById('contactNumber').value;
-        const email = document.getElementById('email').value;
-        const aadhaar = document.getElementById('aadhaar').value;
-        const pan = document.getElementById('pan').value;
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore(app);
 
-        if (shopName && ownerName && contactNumber && email && aadhaar && pan) {
-            db.collection('customers').add({
-                shopName: shopName,
-                ownerName: ownerName,
-                contactNumber: contactNumber,
-                email: email,
-                aadhaar: aadhaar,
-                pan: pan,
-                createdAt: new Date()
-            })
-            .then(() => {
-                document.getElementById('successMessage').style.display = 'block';
-            })
-            .catch((error) => {
-                console.error("Error adding document: ", error);
-                alert('Error submitting form. Please try again.');
-            });
-        } else {
-            alert('Please fill all fields.');
+        // Submit form data to Firestore
+        function submitForm() {
+            const shopName = document.getElementById('shopName').value;
+            const ownerName = document.getElementById('ownerName').value;
+            const aadhaarNumber = document.getElementById('aadhaarNumber').value;
+            const panNumber = document.getElementById('panNumber').value;
+
+            if (shopName && ownerName && aadhaarNumber && panNumber) {
+                db.collection("creditlineApplications").add({
+                    shopName: shopName,
+                    ownerName: ownerName,
+                    aadhaarNumber: aadhaarNumber,
+                    panNumber: panNumber,
+                    timestamp: new Date(),
+                })
+                .then(() => {
+                    document.getElementById('successMessage').textContent = 'Successfully Applied!';
+                })
+                .catch((error) => {
+                    alert('Error saving data: ' + error.message);
+                });
+            } else {
+                alert('Please fill out all fields.');
+            }
         }
-    }
-</script>
+    </script>
 
 </body>
 </html>
