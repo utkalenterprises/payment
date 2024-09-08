@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Credit Line Onboarding</title>
     <style>
@@ -14,7 +13,6 @@
             align-items: center;
             padding: 20px;
         }
-
         .container {
             background: #fff;
             padding: 20px;
@@ -23,22 +21,18 @@
             max-width: 500px;
             width: 100%;
         }
-
         h2 {
             color: #007bff;
             text-align: center;
         }
-
         .form-group {
             margin-bottom: 15px;
         }
-
         label {
             display: block;
             font-weight: bold;
             margin-bottom: 5px;
         }
-
         input[type="text"], input[type="email"], input[type="number"] {
             width: calc(100% - 20px);
             padding: 10px;
@@ -46,7 +40,6 @@
             border-radius: 5px;
             font-size: 14px;
         }
-
         button {
             background-color: #007bff;
             color: white;
@@ -57,18 +50,15 @@
             cursor: pointer;
             font-size: 16px;
         }
-
         button:hover {
             background-color: #0056b3;
         }
-
         .success-message {
             display: none;
             color: green;
             margin-top: 15px;
             text-align: center;
         }
-
         .download-link {
             display: none;
             text-align: center;
@@ -81,27 +71,27 @@
         <h2>Credit Line Onboarding</h2>
         <div class="form-group">
             <label for="shopName">Shop Name</label>
-            <input type="text" id="shopName" required>
+            <input type="text" id="shopName" autocomplete="off" required>
         </div>
         <div class="form-group">
             <label for="ownerName">Owner Name</label>
-            <input type="text" id="ownerName" required>
+            <input type="text" id="ownerName" autocomplete="off" required>
         </div>
         <div class="form-group">
             <label for="contactNumber">Contact Number</label>
-            <input type="text" id="contactNumber" required>
+            <input type="text" id="contactNumber" autocomplete="off" required>
         </div>
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" required>
+            <input type="email" id="email" autocomplete="off" required>
         </div>
         <div class="form-group">
             <label for="aadhaar">Aadhaar Number</label>
-            <input type="text" id="aadhaar" required>
+            <input type="text" id="aadhaar" autocomplete="off" required>
         </div>
         <div class="form-group">
             <label for="pan">PAN Number</label>
-            <input type="text" id="pan" required>
+            <input type="text" id="pan" autocomplete="off" required>
         </div>
         <button onclick="submitForm()">Submit</button>
 
@@ -122,7 +112,7 @@
             const aadhaar = document.getElementById('aadhaar').value;
             const pan = document.getElementById('pan').value;
 
-            // Google Apps Script URL - Replace with your own deployment URL
+            // Replace with your Google Apps Script URL
             const scriptURL = 'https://script.google.com/macros/s/AKfycbw-hfNZ7jO8SKSsi6-gw56BCqA7-R6zXTACz5u7A_Qc_HRgDS5AwsxEw6njscItSm7T/exec';
 
             fetch(scriptURL, {
