@@ -7,48 +7,47 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            background-color: #f4f8fb;
+            margin: 0;
             padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
         }
         .container {
-            background: #fff;
+            background-color: #ffffff;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
             width: 100%;
-        }
-        h2 {
-            color: #007bff;
-            text-align: center;
         }
         .form-group {
             margin-bottom: 15px;
         }
         label {
-            display: block;
             font-weight: bold;
+            display: block;
             margin-bottom: 5px;
         }
-        input[type="text"], input[type="email"], input[type="number"] {
-            width: calc(100% - 20px);
+        input {
+            width: calc(100% - 12px);
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 14px;
         }
         button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
             width: 100%;
-            cursor: pointer;
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            color: #fff;
+            border-radius: 5px;
             font-size: 16px;
+            cursor: pointer;
         }
         button:hover {
             background-color: #0056b3;
@@ -56,66 +55,68 @@
         .success-message {
             display: none;
             color: green;
-            margin-top: 15px;
-            text-align: center;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .error-message {
+            display: none;
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
         }
         .download-link {
             display: none;
-            text-align: center;
             margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Credit Line Onboarding</h2>
-        <div class="form-group">
-            <label for="shopName">Shop Name</label>
-            <input type="text" id="shopName" autocomplete="off" required>
-        </div>
-        <div class="form-group">
-            <label for="ownerName">Owner Name</label>
-            <input type="text" id="ownerName" autocomplete="off" required>
-        </div>
-        <div class="form-group">
-            <label for="contactNumber">Contact Number</label>
-            <input type="text" id="contactNumber" autocomplete="off" required>
-        </div>
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" autocomplete="off" required>
-        </div>
-        <div class="form-group">
-            <label for="aadhaar">Aadhaar Number</label>
-            <input type="text" id="aadhaar" autocomplete="off" required>
-        </div>
-        <div class="form-group">
-            <label for="pan">PAN Number</label>
-            <input type="text" id="pan" autocomplete="off" required>
-        </div>
-        <button onclick="submitForm()">Submit</button>
 
-        <div class="success-message" id="successMessage">
-            Successfully Applied!
-        </div>
-        <div class="download-link" id="downloadLink">
-            <a href="#" id="pdfLink" target="_blank">Download Agreement PDF</a>
-        </div>
+<div class="container">
+    <h2>Credit Line Onboarding</h2>
+    <div class="form-group">
+        <label for="shopName">Shop Name</label>
+        <input type="text" id="shopName" placeholder="Enter Shop Name" required>
     </div>
+    <div class="form-group">
+        <label for="ownerName">Owner Name</label>
+        <input type="text" id="ownerName" placeholder="Enter Owner Name" required>
+    </div>
+    <div class="form-group">
+        <label for="contactNumber">Contact Number</label>
+        <input type="text" id="contactNumber" placeholder="Enter Contact Number" required>
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="text" id="email" placeholder="Enter Email" required>
+    </div>
+    <div class="form-group">
+        <label for="aadhaar">Aadhaar Number</label>
+        <input type="text" id="aadhaar" placeholder="Enter Aadhaar Number" required>
+    </div>
+    <div class="form-group">
+        <label for="pan">PAN Number</label>
+        <input type="text" id="pan" placeholder="Enter PAN Number" required>
+    </div>
+    <button onclick="submitForm()">Submit</button>
+    <div class="success-message" id="successMessage">Successfully applied for credit line!</div>
+    <div class="error-message" id="errorMessage">Failed to apply. Please try again.</div>
+    <div class="download-link" id="downloadLink">
+        <a href="#" id="pdfLink" download>Download Agreement</a>
+    </div>
+</div>
 
-    <script>
-        function submitForm() {
-            const shopName = document.getElementById('shopName').value;
-            const ownerName = document.getElementById('ownerName').value;
-            const contactNumber = document.getElementById('contactNumber').value;
-            const email = document.getElementById('email').value;
-            const aadhaar = document.getElementById('aadhaar').value;
-            const pan = document.getElementById('pan').value;
+<script>
+    function submitForm() {
+        const shopName = document.getElementById('shopName').value;
+        const ownerName = document.getElementById('ownerName').value;
+        const contactNumber = document.getElementById('contactNumber').value;
+        const email = document.getElementById('email').value;
+        const aadhaar = document.getElementById('aadhaar').value;
+        const pan = document.getElementById('pan').value;
 
-            // Replace with your Google Apps Script URL
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbw-hfNZ7jO8SKSsi6-gw56BCqA7-R6zXTACz5u7A_Qc_HRgDS5AwsxEw6njscItSm7T/exec';
-
-            fetch(scriptURL, {
+        if (shopName && ownerName && contactNumber && email && aadhaar && pan) {
+            fetch('https://script.google.com/macros/s/AKfycbw-hfNZ7jO8SKSsi6-gw56BCqA7-R6zXTACz5u7A_Qc_HRgDS5AwsxEw6njscItSm7T/exec', { // Replace with your Google Apps Script URL
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -134,13 +135,20 @@
                 if (data.status === 'success') {
                     document.getElementById('successMessage').style.display = 'block';
                     document.getElementById('downloadLink').style.display = 'block';
-                    document.getElementById('pdfLink').href = data.pdf; // Link to the generated PDF
+                    document.getElementById('pdfLink').href = data.pdf;
                 } else {
-                    alert('Error: ' + data.message);
+                    document.getElementById('errorMessage').style.display = 'block';
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('errorMessage').style.display = 'block';
+            });
+        } else {
+            alert('Please fill all fields.');
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
