@@ -95,12 +95,28 @@
         <input type="text" id="ownerName" placeholder="Enter Owner Name">
     </div>
     <div class="form-group">
-        <label for="aadhaarNumber">Aadhaar Number</label>
-        <input type="text" id="aadhaarNumber" placeholder="Enter Aadhaar Number">
+        <label for="mobileNumber">Mobile Number</label>
+        <input type="text" id="mobileNumber" placeholder="Enter Mobile Number">
     </div>
     <div class="form-group">
-        <label for="panNumber">PAN Number</label>
-        <input type="text" id="panNumber" placeholder="Enter PAN Number">
+        <label for="shopAddress">Shop Address</label>
+        <input type="text" id="shopAddress" placeholder="Enter Shop Address">
+    </div>
+    <div class="form-group">
+        <label for="aadhaarPhoto">Aadhaar Photo</label>
+        <input type="file" id="aadhaarPhoto" accept="image/*">
+    </div>
+    <div class="form-group">
+        <label for="panPhoto">Pan Photo</label>
+        <input type="file" id="panPhoto" accept="image/*">
+    </div>
+    <div class="form-group">
+        <label for="shopPhoto">Shop Photo</label>
+        <input type="file" id="shopPhoto" accept="image/*">
+    </div>
+    <div class="form-group">
+        <label for="ownerPhoto">Owner Photo</label>
+        <input type="file" id="ownerPhoto" accept="image/*">
     </div>
     <button onclick="submitForm()">Submit</button>
     <div class="success-message" id="successMessage"></div>
@@ -109,6 +125,9 @@
 <!-- Correct Firebase SDK URLs -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.72/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.72/vfs_fonts.js"></script>
 
 <script>
     // Your web app's Firebase configuration
@@ -125,31 +144,123 @@
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+    const storage = firebase.storage();
 
-    // Submit form data to Firestore
-    function submitForm() {
+    async function submitForm() {
         const shopName = document.getElementById('shopName').value;
         const ownerName = document.getElementById('ownerName').value;
-        const aadhaarNumber = document.getElementById('aadhaarNumber').value;
-        const panNumber = document.getElementById('panNumber').value;
+        const mobileNumber = document.getElementById('mobileNumber').value;
+        const shopAddress = document.getElementById('shopAddress').value;
+        const aadhaarPhoto = document.getElementById('aadhaarPhoto').files[0];
+        const panPhoto = document.getElementById('panPhoto').files[0];
+        const shopPhoto = document.getElementById('shopPhoto').files[0];
+        const ownerPhoto = document.getElementById('ownerPhoto').files[0];
 
-        if (shopName && ownerName && aadhaarNumber && panNumber) {
-            db.collection("creditlineApplications").add({
-                shopName: shopName,
-                ownerName: ownerName,
-                aadhaarNumber: aadhaarNumber,
-                panNumber: panNumber,
-                timestamp: new Date(),
-            })
-            .then(() => {
-                document.getElementById('successMessage').textContent = 'Successfully Applied!';
-            })
-            .catch((error) => {
-                alert('Error saving data: ' + error.message);
-            });
-        } else {
-            alert('Please fill out all fields.');
+        if (!shopName || !ownerName || !mobileNumber || !shopAddress || !aadhaarPhoto || !panPhoto || !shopPhoto || !ownerPhoto) {
+            alert('Please fill out all fields and upload all photos.');
+            return;
         }
+
+        try {
+            // Upload images to Firebase Storage and get URLs
+            const aadhaarUrl = await uploadFile(aadhaarPhoto, `aadhaar/${aadhaarPhoto.name}`);
+            const panUrl = await uploadFile(panPhoto, `pan/${panPhoto.name}`);
+            const shopUrl = await uploadFile(shopPhoto, `shop/${shopPhoto.name}`);
+            const ownerUrl = await uploadFile(ownerPhoto, `owner/${ownerPhoto.name}`);
+
+            // Save data to Firestore
+            await db.collection("creditlineApplications").add({
+                shopName,
+                ownerName,
+                mobileNumber,
+                shopAddress,
+                aadhaarUrl,
+                panUrl,
+                shopUrl,
+                ownerUrl,
+                timestamp: new Date(),
+            });
+
+            // Generate PDF
+            generatePDF(shopName, ownerName, mobileNumber, shopAddress, aadhaarUrl, panUrl, shopUrl, ownerUrl);
+
+            document.getElementById('successMessage').textContent = 'Successfully Applied for Credit Line!';
+        } catch (error) {
+            alert('Error saving data: ' + error.message);
+        }
+    }
+
+    async function uploadFile(file, path) {
+        const storageRef = storage.ref().child(path);
+        const snapshot = await storageRef.put(file);
+        return await snapshot.ref.getDownloadURL();
+    }
+
+    function generatePDF(shopName, ownerName, mobileNumber, shopAddress, aadhaarUrl, panUrl, shopUrl, ownerUrl) {
+        const docDefinition = {
+            content: [
+                {
+                    text: 'UTKAL ENTERPRISES\n', style: 'header', alignment: 'center'
+                },
+                {
+                    text: 'GST: 21ETBPB9102E1ZH\nAddress: Badakhualane, Mahammadpur, Balasore, Odisha, 756002\n' +
+                        'Mob: 8328841549, Email: support@utkalb2b.in\n\n', alignment: 'center'
+                },
+                {
+                    text: 'CREDIT LINE AGREEMENT', style: 'subheader', alignment: 'center'
+                },
+                {
+                    text: `Shop Name: ${shopName}\nOwner Name: ${ownerName}\nMobile Number: ${mobileNumber}\n` +
+                        `Shop Address: ${shopAddress}\n\n`, margin: [0, 10]
+                },
+                {
+                    text: 'Terms and Conditions:', style: 'subheader'
+                },
+                {
+                    ul: [
+                        'The credit line is extended subject to terms agreed upon between Utkal Enterprises and the shop owner.',
+                        'Failure to repay the due amount within 15 days will attract a daily compounding interest of 0.5%.',
+                        'The agreement is binding and enforceable under the laws applicable in Odisha, India.',
+                    ]
+                },
+                {
+                    text: '\nCompounding Interest Example:', style: 'subheader'
+                },
+                {
+                    text: 'For an amount of ₹1000, the interest will compound daily at 0.5% after 15 days.\n' +
+                        'From day 15 to day 30, interest accumulation is shown below:\n', margin: [0, 5]
+                },
+                {
+                    table: {
+                        headerRows: 1,
+                        body: [
+                            ['Day', 'Principal (₹)', 'Interest (₹)', 'Total (₹)'],
+                            ['15', '1000', '0', '1000'],
+                            ['16', '1000', '5', '1005'],
+                            ['17', '1005', '5.025', '1010.025'],
+                            ['...', '...', '...', '...'],
+                            ['30', '1072.45', '5.362', '1077.812'],
+                        ]
+                    }
+                },
+                {
+                    text: '\nPhotos:', style: 'subheader'
+                },
+                {
+                    image: shopUrl, width: 150, height: 100, caption: 'Shop Photo'
+                },
+                {
+                    image: ownerUrl, width: 150, height: 100, caption: 'Owner Photo', margin: [0, 10]
+                }
+            ],
+            styles: {
+                header: { fontSize: 18, bold: true },
+                subheader: { fontSize: 14, bold: true },
+            }
+        };
+
+        // Create the PDF
+        pdfMake.createPdf(docDefinition).download('CreditLineAgreement.pdf');
     }
 </script>
 
