@@ -84,74 +84,74 @@
 </head>
 <body>
 
-    <div class="container">
-        <h1>Credit Line Onboarding</h1>
-        <div class="form-group">
-            <label for="shopName">Shop Name</label>
-            <input type="text" id="shopName" placeholder="Enter Shop Name">
-        </div>
-        <div class="form-group">
-            <label for="ownerName">Owner Name</label>
-            <input type="text" id="ownerName" placeholder="Enter Owner Name">
-        </div>
-        <div class="form-group">
-            <label for="aadhaarNumber">Aadhaar Number</label>
-            <input type="text" id="aadhaarNumber" placeholder="Enter Aadhaar Number">
-        </div>
-        <div class="form-group">
-            <label for="panNumber">PAN Number</label>
-            <input type="text" id="panNumber" placeholder="Enter PAN Number">
-        </div>
-        <button onclick="submitForm()">Submit</button>
-        <div class="success-message" id="successMessage"></div>
+<div class="container">
+    <h1>Credit Line Onboarding</h1>
+    <div class="form-group">
+        <label for="shopName">Shop Name</label>
+        <input type="text" id="shopName" placeholder="Enter Shop Name">
     </div>
+    <div class="form-group">
+        <label for="ownerName">Owner Name</label>
+        <input type="text" id="ownerName" placeholder="Enter Owner Name">
+    </div>
+    <div class="form-group">
+        <label for="aadhaarNumber">Aadhaar Number</label>
+        <input type="text" id="aadhaarNumber" placeholder="Enter Aadhaar Number">
+    </div>
+    <div class="form-group">
+        <label for="panNumber">PAN Number</label>
+        <input type="text" id="panNumber" placeholder="Enter PAN Number">
+    </div>
+    <button onclick="submitForm()">Submit</button>
+    <div class="success-message" id="successMessage"></div>
+</div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js"></script>
+<!-- Correct Firebase SDK URLs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
-    <script>
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCaiK6I2ft33OtoNISnJ1UAep6E7jBRfJ0",
-            authDomain: "utkalb2b-web.firebaseapp.com",
-            projectId: "utkalb2b-web",
-            storageBucket: "utkalb2b-web.appspot.com",
-            messagingSenderId: "974973982982",
-            appId: "1:974973982982:web:90a779568f593817c5a687",
-            measurementId: "G-QRX9527XPG"
-        };
+<script>
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyCaiK6I2ft33OtoNISnJ1UAep6E7jBRfJ0",
+        authDomain: "utkalb2b-web.firebaseapp.com",
+        projectId: "utkalb2b-web",
+        storageBucket: "utkalb2b-web.appspot.com",
+        messagingSenderId: "974973982982",
+        appId: "1:974973982982:web:90a779568f593817c5a687",
+        measurementId: "G-QRX9527XPG"
+    };
 
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore(app);
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-        // Submit form data to Firestore
-        function submitForm() {
-            const shopName = document.getElementById('shopName').value;
-            const ownerName = document.getElementById('ownerName').value;
-            const aadhaarNumber = document.getElementById('aadhaarNumber').value;
-            const panNumber = document.getElementById('panNumber').value;
+    // Submit form data to Firestore
+    function submitForm() {
+        const shopName = document.getElementById('shopName').value;
+        const ownerName = document.getElementById('ownerName').value;
+        const aadhaarNumber = document.getElementById('aadhaarNumber').value;
+        const panNumber = document.getElementById('panNumber').value;
 
-            if (shopName && ownerName && aadhaarNumber && panNumber) {
-                db.collection("creditlineApplications").add({
-                    shopName: shopName,
-                    ownerName: ownerName,
-                    aadhaarNumber: aadhaarNumber,
-                    panNumber: panNumber,
-                    timestamp: new Date(),
-                })
-                .then(() => {
-                    document.getElementById('successMessage').textContent = 'Successfully Applied!';
-                })
-                .catch((error) => {
-                    alert('Error saving data: ' + error.message);
-                });
-            } else {
-                alert('Please fill out all fields.');
-            }
+        if (shopName && ownerName && aadhaarNumber && panNumber) {
+            db.collection("creditlineApplications").add({
+                shopName: shopName,
+                ownerName: ownerName,
+                aadhaarNumber: aadhaarNumber,
+                panNumber: panNumber,
+                timestamp: new Date(),
+            })
+            .then(() => {
+                document.getElementById('successMessage').textContent = 'Successfully Applied!';
+            })
+            .catch((error) => {
+                alert('Error saving data: ' + error.message);
+            });
+        } else {
+            alert('Please fill out all fields.');
         }
-    </script>
+    }
+</script>
 
 </body>
 </html>
