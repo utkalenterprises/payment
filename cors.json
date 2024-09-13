@@ -1,0 +1,9 @@
+[
+    {
+      "origin": ["https://pay.utkalb2b.in"],
+      "method": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      "maxAgeSeconds": 3600,
+      "responseHeader": ["Content-Type", "x-goog-resumable"]
+    }
+  ]
+  
