@@ -123,8 +123,8 @@
         };
 
         // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore(app);
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
         // Submit form data to Firestore
         function submitForm() {
