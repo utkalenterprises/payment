@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Credit Line Onboarding</title>
     <style>
+        /* Styling the form */
         body {
             font-family: 'Roboto', sans-serif;
             background-color: #f4f8fb;
@@ -53,6 +54,10 @@
             transition: border-color 0.3s;
         }
 
+        input[type="file"] {
+            padding: 0;
+        }
+
         input:focus {
             border-color: #007bff;
             outline: none;
@@ -95,12 +100,36 @@
             <input type="text" id="ownerName" placeholder="Enter Owner Name">
         </div>
         <div class="form-group">
+            <label for="mobileNumber">Mobile Number</label>
+            <input type="text" id="mobileNumber" placeholder="Enter Mobile Number">
+        </div>
+        <div class="form-group">
+            <label for="shopAddress">Shop Address</label>
+            <input type="text" id="shopAddress" placeholder="Enter Shop Address">
+        </div>
+        <div class="form-group">
             <label for="aadhaarNumber">Aadhaar Number</label>
             <input type="text" id="aadhaarNumber" placeholder="Enter Aadhaar Number">
         </div>
         <div class="form-group">
             <label for="panNumber">PAN Number</label>
             <input type="text" id="panNumber" placeholder="Enter PAN Number">
+        </div>
+        <div class="form-group">
+            <label for="shopPhoto">Shop Photo</label>
+            <input type="file" id="shopPhoto">
+        </div>
+        <div class="form-group">
+            <label for="ownerPhoto">Owner Photo</label>
+            <input type="file" id="ownerPhoto">
+        </div>
+        <div class="form-group">
+            <label for="aadhaarPhoto">Aadhaar Photo</label>
+            <input type="file" id="aadhaarPhoto">
+        </div>
+        <div class="form-group">
+            <label for="panPhoto">PAN Photo</label>
+            <input type="file" id="panPhoto">
         </div>
         <button onclick="submitForm()">Submit</button>
         <div class="success-message" id="successMessage"></div>
@@ -109,6 +138,8 @@
     <!-- Firebase v8 SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
         // Your web app's Firebase configuration
@@ -125,31 +156,97 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const storage = firebase.storage();
 
         // Submit form data to Firestore
-        function submitForm() {
+        async function submitForm() {
             const shopName = document.getElementById('shopName').value;
             const ownerName = document.getElementById('ownerName').value;
+            const mobileNumber = document.getElementById('mobileNumber').value;
+            const shopAddress = document.getElementById('shopAddress').value;
             const aadhaarNumber = document.getElementById('aadhaarNumber').value;
             const panNumber = document.getElementById('panNumber').value;
+            const shopPhoto = document.getElementById('shopPhoto').files[0];
+            const ownerPhoto = document.getElementById('ownerPhoto').files[0];
+            const aadhaarPhoto = document.getElementById('aadhaarPhoto').files[0];
+            const panPhoto = document.getElementById('panPhoto').files[0];
 
-            if (shopName && ownerName && aadhaarNumber && panNumber) {
-                db.collection("creditlineApplications").add({
-                    shopName: shopName,
-                    ownerName: ownerName,
-                    aadhaarNumber: aadhaarNumber,
-                    panNumber: panNumber,
-                    timestamp: new Date(),
-                })
-                .then(() => {
+            if (shopName && ownerName && mobileNumber && shopAddress && aadhaarNumber && panNumber && shopPhoto && ownerPhoto && aadhaarPhoto && panPhoto) {
+                try {
+                    // Upload photos to Firebase Storage
+                    const shopPhotoURL = await uploadFile(shopPhoto, 'shopPhotos/' + shopPhoto.name);
+                    const ownerPhotoURL = await uploadFile(ownerPhoto, 'ownerPhotos/' + ownerPhoto.name);
+                    const aadhaarPhotoURL = await uploadFile(aadhaarPhoto, 'aadhaarPhotos/' + aadhaarPhoto.name);
+                    const panPhotoURL = await uploadFile(panPhoto, 'panPhotos/' + panPhoto.name);
+
+                    // Save form data to Firestore
+                    await db.collection("creditlineApplications").add({
+                        shopName: shopName,
+                        ownerName: ownerName,
+                        mobileNumber: mobileNumber,
+                        shopAddress: shopAddress,
+                        aadhaarNumber: aadhaarNumber,
+                        panNumber: panNumber,
+                        shopPhotoURL: shopPhotoURL,
+                        ownerPhotoURL: ownerPhotoURL,
+                        aadhaarPhotoURL: aadhaarPhotoURL,
+                        panPhotoURL: panPhotoURL,
+                        timestamp: new Date(),
+                    });
+
                     document.getElementById('successMessage').textContent = 'Successfully Applied!';
-                })
-                .catch((error) => {
+                    generatePDF(shopName, ownerName, mobileNumber, shopAddress, aadhaarNumber, panNumber);
+                } catch (error) {
                     alert('Error saving data: ' + error.message);
-                });
+                }
             } else {
-                alert('Please fill out all fields.');
+                alert('Please fill out all fields and upload all photos.');
             }
+        }
+
+        // Upload file to Firebase Storage
+        function uploadFile(file, path) {
+            return new Promise((resolve, reject) => {
+                const storageRef = storage.ref(path);
+                const uploadTask = storageRef.put(file);
+
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        // Progress handling
+                    },
+                    (error) => {
+                        reject(error);
+                    },
+                    () => {
+                        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                            resolve(downloadURL);
+                        });
+                    }
+                );
+            });
+        }
+
+        // Generate PDF using jsPDF
+        function generatePDF(shopName, ownerName, mobileNumber, shopAddress, aadhaarNumber, panNumber) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.text("Credit Line Agreement", 10, 10);
+            doc.text(`Shop Name: ${shopName}`, 10, 20);
+            doc.text(`Owner Name: ${ownerName}`, 10, 30);
+            doc.text(`Mobile Number: ${mobileNumber}`, 10, 40);
+            doc.text(`Shop Address: ${shopAddress}`, 10, 50);
+            doc.text(`Aadhaar Number: ${aadhaarNumber}`, 10, 60);
+            doc.text(`PAN Number: ${panNumber}`, 10, 70);
+
+            // Example terms and conditions
+            doc.text("Terms and Conditions:", 10, 80);
+            doc.text("1. The credit line is subject to approval based on the provided documents.", 10, 90);
+            doc.text("2. The due amount attracts a 0.5% daily compounding interest after 15 days.", 10, 100);
+            doc.text("3. The agreement is valid for the specified period and is renewable.", 10, 110);
+            doc.text("4. The company reserves the right to terminate the credit line if terms are violated.", 10, 120);
+
+            doc.save("Credit_Line_Agreement.pdf");
         }
     </script>
 
