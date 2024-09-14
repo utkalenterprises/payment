@@ -1,42 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Credit Line Form</title>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Line Onboarding</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f8fb;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+            margin: 30px 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        input {
+            width: calc(100% - 20px);
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .success-message {
+            color: green;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Credit Line Form</h1>
-    <form id="creditline-form">
-        
-        <label for="shopname">Shop Name:</label>
-        <input type="text" id="shopname" name="shopname" required><br>
 
-        <label for="ownername">Owner Name:</label>
-        <input type="text" id="ownername" name="ownername" required><br>
+    <div class="container">
+        <h1>Credit Line Onboarding</h1>
+        <div class="form-group">
+            <label for="shopName">Shop Name</label>
+            <input type="text" id="shopName" placeholder="Enter Shop Name">
+        </div>
+        <div class="form-group">
+            <label for="ownerName">Owner Name</label>
+            <input type="text" id="ownerName" placeholder="Enter Owner Name">
+        </div>
+        <div class="form-group">
+            <label for="aadhaarNumber">Aadhaar Number</label>
+            <input type="text" id="aadhaarNumber" placeholder="Enter Aadhaar Number">
+        </div>
+        <div class="form-group">
+            <label for="panNumber">PAN Number</label>
+            <input type="text" id="panNumber" placeholder="Enter PAN Number">
+        </div>
+        <button onclick="submitForm()">Submit</button>
+        <div class="success-message" id="successMessage"></div>
+    </div>
 
-        <label for="mobileNumber">Mobile Number:</label>
-        <input type="text" id="mobileNumber" name="mobileNumber" required><br>
-
-        <label for="shopAddress">Shop Address:</label>
-        <input type="text" id="shopAddress" name="shopAddress" required><br>
-
-        <label for="aadhaarPhoto">Aadhaar Photo:</label>
-        <input type="file" id="aadhaarPhoto" name="aadhaarPhoto" required><br>
-
-        <label for="panPhoto">Pan Photo:</label>
-        <input type="file" id="panPhoto" name="panPhoto" required><br>
-
-        <label for="shopPhoto">Shop Photo:</label>
-        <input type="file" id="shopPhoto" name="shopPhoto" required><br>
-
-        <label for="ownerPhoto">Owner Photo:</label>
-        <input type="file" id="ownerPhoto" name="ownerPhoto" required><br>
-
-        <button type="button" onclick="submitForm()">Submit</button>
-    </form>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js"></script>
 
     <script>
         // Your web app's Firebase configuration
@@ -51,56 +123,35 @@
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const storage = firebase.storage();
-        const firestore = firebase.firestore();
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore(app);
 
-        async function submitForm() {
-            const form = document.getElementById('creditline-form');
-            const mobileNumber = document.getElementById('mobileNumber').value;
-            const shopAddress = document.getElementById('shopAddress').value;
+        // Submit form data to Firestore
+        function submitForm() {
+            const shopName = document.getElementById('shopName').value;
+            const ownerName = document.getElementById('ownerName').value;
+            const aadhaarNumber = document.getElementById('aadhaarNumber').value;
+            const panNumber = document.getElementById('panNumber').value;
 
-            const aadhaarPhoto = document.getElementById('aadhaarPhoto').files[0];
-            const panPhoto = document.getElementById('panPhoto').files[0];
-            const shopPhoto = document.getElementById('shopPhoto').files[0];
-            const ownerPhoto = document.getElementById('ownerPhoto').files[0];
-
-            try {
-                const aadhaarRef = storage.ref('aadhaar/' + aadhaarPhoto.name);
-                const panRef = storage.ref('pan/' + panPhoto.name);
-                const shopRef = storage.ref('shop/' + shopPhoto.name);
-                const ownerRef = storage.ref('owner/' + ownerPhoto.name);
-
-                await Promise.all([
-                    aadhaarRef.put(aadhaarPhoto),
-                    panRef.put(panPhoto),
-                    shopRef.put(shopPhoto),
-                    ownerRef.put(ownerPhoto)
-                ]);
-
-                const aadhaarURL = await aadhaarRef.getDownloadURL();
-                const panURL = await panRef.getDownloadURL();
-                const shopURL = await shopRef.getDownloadURL();
-                const ownerURL = await ownerRef.getDownloadURL();
-
-                // Save data to Firestore
-                await firestore.collection('creditLines').add({
-                    mobileNumber,
-                    shopAddress,
-                    aadhaarPhoto: aadhaarURL,
-                    panPhoto: panURL,
-                    shopPhoto: shopURL,
-                    ownerPhoto: ownerURL
+            if (shopName && ownerName && aadhaarNumber && panNumber) {
+                db.collection("creditlineApplications").add({
+                    shopName: shopName,
+                    ownerName: ownerName,
+                    aadhaarNumber: aadhaarNumber,
+                    panNumber: panNumber,
+                    timestamp: new Date(),
+                })
+                .then(() => {
+                    document.getElementById('successMessage').textContent = 'Successfully Applied!';
+                })
+                .catch((error) => {
+                    alert('Error saving data: ' + error.message);
                 });
-
-                alert('Successfully Applied for Credit Line. You can download the agreement as PDF.');
-
-                // Redirect or open the PDF download page
-                window.location.href = 'path_to_your_pdf_download_page.html';
-            } catch (error) {
-                console.error('Error saving data:', error);
+            } else {
+                alert('Please fill out all fields.');
             }
         }
     </script>
+
 </body>
 </html>
