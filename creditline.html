@@ -3,146 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Credit Line Onboarding</title>
+    <title>Credit Line Application</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js"></script>
+    <!-- jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- CSS for styling and animations -->
     <style>
-        /* Styling the form */
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f4f8fb;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0;
-            padding: 0;
+            background: linear-gradient(to right, #f4f8fb, #c3e0e5);
             color: #333;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-
         .container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
             max-width: 500px;
-            width: 90%;
-            margin: 30px 0;
+            width: 100%;
         }
-
-        h1 {
-            text-align: center;
-            color: #007bff;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
-
         label {
             display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #555;
+            margin-bottom: 5px;
         }
-
         input {
-            width: calc(100% - 20px);
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-
-        input[type="file"] {
-            padding: 0;
-        }
-
-        input:focus {
-            border-color: #007bff;
-            outline: none;
-        }
-
-        button {
-            display: block;
             width: 100%;
-            padding: 12px;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        button {
             background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 6px;
-            font-size: 16px;
+            padding: 10px 20px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
+            transition: background-color 0.3s, transform 0.3s;
         }
-
         button:hover {
             background-color: #0056b3;
             transform: translateY(-2px);
         }
-
-        .success-message {
-            color: green;
-            margin-top: 20px;
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            z-index: 9999;
+            display: none; /* Hidden by default */
         }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <h1>Credit Line Onboarding</h1>
-        <div class="form-group">
-            <label for="shopName">Shop Name</label>
-            <input type="text" id="shopName" placeholder="Enter Shop Name">
-        </div>
-        <div class="form-group">
-            <label for="ownerName">Owner Name</label>
-            <input type="text" id="ownerName" placeholder="Enter Owner Name">
-        </div>
-        <div class="form-group">
-            <label for="mobileNumber">Mobile Number</label>
-            <input type="text" id="mobileNumber" placeholder="Enter Mobile Number">
-        </div>
-        <div class="form-group">
-            <label for="shopAddress">Shop Address</label>
-            <input type="text" id="shopAddress" placeholder="Enter Shop Address">
-        </div>
-        <div class="form-group">
-            <label for="aadhaarNumber">Aadhaar Number</label>
-            <input type="text" id="aadhaarNumber" placeholder="Enter Aadhaar Number">
-        </div>
-        <div class="form-group">
-            <label for="panNumber">PAN Number</label>
-            <input type="text" id="panNumber" placeholder="Enter PAN Number">
-        </div>
-        <div class="form-group">
-            <label for="shopPhoto">Shop Photo</label>
-            <input type="file" id="shopPhoto">
-        </div>
-        <div class="form-group">
-            <label for="ownerPhoto">Owner Photo</label>
-            <input type="file" id="ownerPhoto">
-        </div>
-        <div class="form-group">
-            <label for="aadhaarPhoto">Aadhaar Photo</label>
-            <input type="file" id="aadhaarPhoto">
-        </div>
-        <div class="form-group">
-            <label for="panPhoto">PAN Photo</label>
-            <input type="file" id="panPhoto">
-        </div>
-        <button onclick="submitForm()">Submit</button>
-        <div class="success-message" id="successMessage"></div>
+        <h2>Credit Line Application</h2>
+        <form id="creditForm">
+            <div class="form-group">
+                <label for="shopName">Shop Name</label>
+                <input type="text" id="shopName" required>
+            </div>
+            <div class="form-group">
+                <label for="ownerName">Owner Name</label>
+                <input type="text" id="ownerName" required>
+            </div>
+            <div class="form-group">
+                <label for="mobileNumber">Mobile Number</label>
+                <input type="text" id="mobileNumber" required>
+            </div>
+            <div class="form-group">
+                <label for="shopAddress">Shop Address</label>
+                <input type="text" id="shopAddress" required>
+            </div>
+            <div class="form-group">
+                <label for="aadhaar">Aadhaar Number</label>
+                <input type="text" id="aadhaar" required>
+            </div>
+            <div class="form-group">
+                <label for="pan">PAN Number</label>
+                <input type="text" id="pan" required>
+            </div>
+            <div class="form-group">
+                <label for="shopPhoto">Shop Photo</label>
+                <input type="file" id="shopPhoto" required>
+            </div>
+            <div class="form-group">
+                <label for="ownerPhoto">Owner Photo</label>
+                <input type="file" id="ownerPhoto" required>
+            </div>
+            <button type="button" onclick="submitForm()">Apply for Credit Line</button>
+        </form>
     </div>
 
-    <!-- Firebase v8 SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <div id="loading" class="loading-overlay">
+        <div>
+            <p>Processing Your Data...</p>
+        </div>
+    </div>
 
     <script>
-        // Your web app's Firebase configuration
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCaiK6I2ft33OtoNISnJ1UAep6E7jBRfJ0",
             authDomain: "utkalb2b-web.firebaseapp.com",
@@ -155,100 +131,110 @@
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
         const storage = firebase.storage();
+        const db = firebase.firestore();
 
-        // Submit form data to Firestore
+        function showLoading() {
+            document.getElementById('loading').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
         async function submitForm() {
+            showLoading();
+            
             const shopName = document.getElementById('shopName').value;
             const ownerName = document.getElementById('ownerName').value;
             const mobileNumber = document.getElementById('mobileNumber').value;
             const shopAddress = document.getElementById('shopAddress').value;
-            const aadhaarNumber = document.getElementById('aadhaarNumber').value;
-            const panNumber = document.getElementById('panNumber').value;
+            const aadhaar = document.getElementById('aadhaar').value;
+            const pan = document.getElementById('pan').value;
             const shopPhoto = document.getElementById('shopPhoto').files[0];
             const ownerPhoto = document.getElementById('ownerPhoto').files[0];
-            const aadhaarPhoto = document.getElementById('aadhaarPhoto').files[0];
-            const panPhoto = document.getElementById('panPhoto').files[0];
 
-            if (shopName && ownerName && mobileNumber && shopAddress && aadhaarNumber && panNumber && shopPhoto && ownerPhoto && aadhaarPhoto && panPhoto) {
-                try {
-                    // Upload photos to Firebase Storage
-                    const shopPhotoURL = await uploadFile(shopPhoto, 'shopPhotos/' + shopPhoto.name);
-                    const ownerPhotoURL = await uploadFile(ownerPhoto, 'ownerPhotos/' + ownerPhoto.name);
-                    const aadhaarPhotoURL = await uploadFile(aadhaarPhoto, 'aadhaarPhotos/' + aadhaarPhoto.name);
-                    const panPhotoURL = await uploadFile(panPhoto, 'panPhotos/' + panPhoto.name);
+            // Upload photos to Firebase Storage
+            const shopPhotoRef = storage.ref().child('photos/' + shopPhoto.name);
+            const ownerPhotoRef = storage.ref().child('photos/' + ownerPhoto.name);
 
-                    // Save form data to Firestore
-                    await db.collection("creditlineApplications").add({
-                        shopName: shopName,
-                        ownerName: ownerName,
-                        mobileNumber: mobileNumber,
-                        shopAddress: shopAddress,
-                        aadhaarNumber: aadhaarNumber,
-                        panNumber: panNumber,
-                        shopPhotoURL: shopPhotoURL,
-                        ownerPhotoURL: ownerPhotoURL,
-                        aadhaarPhotoURL: aadhaarPhotoURL,
-                        panPhotoURL: panPhotoURL,
-                        timestamp: new Date(),
-                    });
+            await shopPhotoRef.put(shopPhoto);
+            await ownerPhotoRef.put(ownerPhoto);
 
-                    document.getElementById('successMessage').textContent = 'Successfully Applied!';
-                    generatePDF(shopName, ownerName, mobileNumber, shopAddress, aadhaarNumber, panNumber);
-                } catch (error) {
-                    alert('Error saving data: ' + error.message);
-                }
-            } else {
-                alert('Please fill out all fields and upload all photos.');
-            }
-        }
+            const shopPhotoURL = await shopPhotoRef.getDownloadURL();
+            const ownerPhotoURL = await ownerPhotoRef.getDownloadURL();
 
-        // Upload file to Firebase Storage
-        function uploadFile(file, path) {
-            return new Promise((resolve, reject) => {
-                const storageRef = storage.ref(path);
-                const uploadTask = storageRef.put(file);
-
-                uploadTask.on('state_changed',
-                    (snapshot) => {
-                        // Progress handling
-                    },
-                    (error) => {
-                        reject(error);
-                    },
-                    () => {
-                        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                            resolve(downloadURL);
-                        });
-                    }
-                );
+            // Save data to Firestore
+            db.collection('creditApplications').add({
+                shopName: shopName,
+                ownerName: ownerName,
+                mobileNumber: mobileNumber,
+                shopAddress: shopAddress,
+                aadhaar: aadhaar,
+                pan: pan,
+                shopPhotoURL: shopPhotoURL,
+                ownerPhotoURL: ownerPhotoURL,
+                timestamp: new Date()
+            }).then(() => {
+                generatePDF(shopName, ownerName, mobileNumber, shopAddress, aadhaar, pan, shopPhotoURL, ownerPhotoURL);
+                hideLoading();
+                alert('Successfully applied for Credit Line!');
+            }).catch((error) => {
+                console.error('Error saving to Firestore: ', error);
+                hideLoading();
             });
         }
 
-        // Generate PDF using jsPDF
-        function generatePDF(shopName, ownerName, mobileNumber, shopAddress, aadhaarNumber, panNumber) {
+        async function generatePDF(shopName, ownerName, mobileNumber, shopAddress, aadhaar, pan, shopPhotoURL, ownerPhotoURL) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
-            doc.text("Credit Line Agreement", 10, 10);
-            doc.text(`Shop Name: ${shopName}`, 10, 20);
-            doc.text(`Owner Name: ${ownerName}`, 10, 30);
-            doc.text(`Mobile Number: ${mobileNumber}`, 10, 40);
-            doc.text(`Shop Address: ${shopAddress}`, 10, 50);
-            doc.text(`Aadhaar Number: ${aadhaarNumber}`, 10, 60);
-            doc.text(`PAN Number: ${panNumber}`, 10, 70);
+            // Add header
+            doc.setFontSize(18);
+            doc.text("UTKAL ENTERPRISES", 20, 20);
 
-            // Example terms and conditions
-            doc.text("Terms and Conditions:", 10, 80);
-            doc.text("1. The credit line is subject to approval based on the provided documents.", 10, 90);
-            doc.text("2. The due amount attracts a 0.5% daily compounding interest after 15 days.", 10, 100);
-            doc.text("3. The agreement is valid for the specified period and is renewable.", 10, 110);
-            doc.text("4. The company reserves the right to terminate the credit line if terms are violated.", 10, 120);
+            // Add shop and owner photos
+            const shopPhoto = await fetch(shopPhotoURL).then(res => res.blob());
+            const ownerPhoto = await fetch(ownerPhotoURL).then(res => res.blob());
 
-            doc.save("Credit_Line_Agreement.pdf");
+            const shopPhotoData = await new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.readAsDataURL(shopPhoto);
+            });
+
+            const ownerPhotoData = await new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.readAsDataURL(ownerPhoto);
+            });
+
+            doc.addImage(shopPhotoData, 'JPEG', 20, 30, 50, 50);
+            doc.addImage(ownerPhotoData, 'JPEG', 80, 30, 50, 50);
+
+            // Add details
+            doc.setFontSize(12);
+            doc.text(`Shop Name: ${shopName}`, 20, 100);
+            doc.text(`Owner Name: ${ownerName}`, 20, 110);
+            doc.text(`Mobile Number: ${mobileNumber}`, 20, 120);
+            doc.text(`Shop Address: ${shopAddress}`, 20, 130);
+            doc.text(`Aadhaar: ${aadhaar}`, 20, 140);
+            doc.text(`PAN: ${pan}`, 20, 150);
+
+            // Add terms and conditions
+            doc.text("Terms and Conditions", 20, 160);
+            doc.setFontSize(10);
+            doc.text("1. This is a credit line agreement with Utkal Enterprises.", 20, 170);
+            // Add more terms as needed...
+
+            // Upload PDF to Firebase Storage
+            const pdfBlob = doc.output('blob');
+            const pdfRef = storage.ref().child('agreements/' + `agreement_${Date.now()}.pdf`);
+            await pdfRef.put(pdfBlob);
+
+            const pdfURL = await pdfRef.getDownloadURL();
+            console.log('PDF URL: ', pdfURL);
         }
     </script>
-
 </body>
 </html>
