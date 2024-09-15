@@ -25,6 +25,7 @@
             max-width: 500px;
             width: 90%;
             margin: 30px 0;
+            position: relative;
         }
 
         h1 {
@@ -85,12 +86,37 @@
             color: green;
             margin-top: 20px;
         }
+
+        .loading-spinner {
+            display: none;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #007bff;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #downloadButton {
+            display: none;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
         <h1>Credit Line Onboarding</h1>
+        <div class="loading-spinner" id="loadingSpinner"></div> <!-- Loading spinner -->
+
         <div class="form-group">
             <label for="shopName">Shop Name</label>
             <input type="text" id="shopName" placeholder="Enter Shop Name">
@@ -133,6 +159,7 @@
         </div>
         <button onclick="submitForm()">Submit</button>
         <div class="success-message" id="successMessage"></div>
+        <button id="downloadButton">Download Agreement PDF</button> <!-- Download button -->
     </div>
 
     <!-- Firebase v8 SDKs -->
@@ -158,7 +185,6 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
 
-        // Submit form data to Firestore
         async function submitForm() {
             const shopName = document.getElementById('shopName').value;
             const ownerName = document.getElementById('ownerName').value;
@@ -173,6 +199,8 @@
 
             if (shopName && ownerName && mobileNumber && shopAddress && aadhaarNumber && panNumber && shopPhoto && ownerPhoto && aadhaarPhoto && panPhoto) {
                 try {
+                    // Show loading spinner
+                    document.getElementById('loadingSpinner').style.display = 'block';
                     // Upload photos to Firebase Storage
                     const shopPhotoURL = await uploadFile(shopPhoto, 'shopPhotos/' + Date.now() + '_' + shopPhoto.name);
                     const ownerPhotoURL = await uploadFile(ownerPhoto, 'ownerPhotos/' + Date.now() + '_' + ownerPhoto.name);
@@ -195,13 +223,23 @@
                     });
 
                     // Generate and save PDF
-                    await generatePDF(shopName, ownerName, mobileNumber, shopAddress, aadhaarNumber, panNumber, shopPhotoURL, ownerPhotoURL);
+                    const pdfURL = await generatePDF(shopName, ownerName, mobileNumber, shopAddress, aadhaarNumber, panNumber, shopPhotoURL, ownerPhotoURL);
 
                     // Show success message
                     document.getElementById('successMessage').innerHTML = "Successfully Applied for Credit Line.";
+
+                    // Show the download button and set the download link
+                    const downloadButton = document.getElementById('downloadButton');
+                    downloadButton.style.display = 'block';
+                    downloadButton.onclick = function() {
+                        window.open(pdfURL, '_blank');
+                    };
                 } catch (error) {
                     console.error("Error submitting form: ", error);
                     alert("There was an error applying for the credit line. Please try again.");
+                } finally {
+                    // Hide loading spinner
+                    document.getElementById('loadingSpinner').style.display = 'none';
                 }
             } else {
                 alert("Please fill in all fields and upload all required photos.");
